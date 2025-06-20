@@ -41,7 +41,8 @@ TILE_COLOR = (100, 100, 100)
 
 
 class MinesweeperEnv:
-    def __init__(self):
+    def __init__(self, critic=None):
+        self.critic = critic
         self.grid = self.create_grid(NUM_ROWS, NUM_COLS, NUM_MINES)
         self.cover_grid = [[-3 for _ in range(NUM_COLS)] for _ in range(NUM_ROWS)]
         self.merged_grid = self.get_merged_grid(self.grid, self.cover_grid)
@@ -128,8 +129,9 @@ class MinesweeperEnv:
 
         if self.cover_grid[row][col] == 1:
             reward = -1  
-            done = True 
-            return self.get_state(), reward, done, won
+            done = True
+            value = self.get_value_estimate()
+            return self.get_state(), reward, done, won, value
         
         # print('row, col:',row,col, '\n', 'value at covergrid[row][col]: ',self.cover_grid[row][col])
         visited_mask = [[0 for _ in range(NUM_COLS)] for _ in range(NUM_ROWS)]
@@ -169,8 +171,17 @@ class MinesweeperEnv:
             else:
                 reward = 0.3
 
-        return self.get_state(), reward, done, won
+        value = self.get_value_estimate()
+        return self.get_state(), reward, done, won, value
 
+
+    def get_value_estimate(self):
+        if self.critic is not None:
+            state = self.get_state()
+            with torch.no_grad():
+                value = self.critic(state).item()
+            return value
+        return 0.0
 
     def check_random_guess(self, row, col):
         # Check if the tile is unrevealed
