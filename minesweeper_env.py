@@ -8,13 +8,14 @@ from collections import deque
 
 ### NROWS, NCOLS, MINES
 DIFFICULTY_LEVELS = {
+    'VeryEasy': (5, 5, 3),
     'Beginner': (9,9,10),
     'Intermediate': (16,16,40),
     'Expert': (21, 21, 90)
 }
-NUM_ROWS = DIFFICULTY_LEVELS['Intermediate'][0]
-NUM_COLS = DIFFICULTY_LEVELS['Intermediate'][1]
-NUM_MINES = DIFFICULTY_LEVELS['Intermediate'][2]
+NUM_ROWS = DIFFICULTY_LEVELS['VeryEasy'][0]
+NUM_COLS = DIFFICULTY_LEVELS['VeryEasy'][1]
+NUM_MINES = DIFFICULTY_LEVELS['VeryEasy'][2]
 ##
 
 WINDOW_SIZE = (1000, 1000)
